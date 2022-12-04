@@ -8,7 +8,6 @@ var swaggerJsdoc = require("swagger-jsdoc")
 var swaggerUi = require("swagger-ui-express");
 const mongoose = require("mongoose");
 var cors = require("cors");
-var passport = require('passport');
 
 var indexRouter = require("./routes/index");
 var usersRouter = require("./routes/users");
@@ -26,8 +25,6 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
-// app.use(passport.initialize());
-// app.use(passport.session())
 
 
 async function main() {
@@ -56,25 +53,6 @@ app.use("/users", usersRouter);
 
 const swaggerDocs = swaggerJsdoc(swaggerOptions);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
-
-/**
- * @swagger
- * /books:
- *   get:
- *     description: Get all books
- *     responses:
- *       200:
- *         description: Success
- * 
- */
-app.get('/books', (req, res) => {
-  res.send([
-    {
-      id: 1,
-      title: "Harry Potter",
-    }
-  ])
-});
 
 
 // catch 404 and forward to error handler

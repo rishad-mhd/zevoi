@@ -1,5 +1,6 @@
 var express = require("express");
-const passport = require("passport");
+const getById = require("../controllers/users/getById");
+const googleAuth = require("../controllers/users/googleAuth");
 const login = require("../controllers/users/login");
 const register = require("../controllers/users/register");
 var router = express.Router();
@@ -90,8 +91,22 @@ router.post("/login", login);
  */
 router.post("/register", register);
 
+/**
+ * @swagger
+ * /users/get-by-id/:id:
+ *   get:
+ *     summary: Get user data by user id.
+ *     parameters:
+ *       - in: params
+ *         name: user
+ *         description: The user to create.
+ *         schema:
+ *           type: string
+ *
+ */
+router.get("/get-by-id/:id", getById);
 
-router.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }))
 
+router.post("/auth/google", googleAuth);
 
 module.exports = router;
