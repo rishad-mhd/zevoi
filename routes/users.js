@@ -1,38 +1,97 @@
 var express = require("express");
-const { Users } = require("../models/Users");
+const passport = require("passport");
+const login = require("../controllers/users/login");
+const register = require("../controllers/users/register");
 var router = express.Router();
 
-/* GET users listing. */
+/**
+ * @swagger
+ * /users/:
+ *   get:
+ *     summary: Retrieve a list of JSONPlaceholder users.
+ *     description: Retrieve a list of users from JSONPlaceholder. Can be used to populate a list of fake users when prototyping or testing an API.
+ *     responses:
+ *       200:
+ *         description: A list of users.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       id:
+ *                         type: integer
+ *                         description: The user ID.
+ *                         example: 0
+ *                       name:
+ *                         type: string
+ *                         description: The user's name.
+ *                         example: Leanne Graham
+ */
 router.get("/", function (req, res, next) {
   res.send("respond with a resource");
 });
 
-router.post("/login", function (req, res, next) {
-  Users.findOne({ email: req.body.email })
-    .then((user) => {
-      if (user) {
-        if (user.password === req.body.password) {
-          res.send({ user, staus: 1 });
-        } else {
-          res.status(401).send({ message: "Incorrect passord" });
-        }
-      } else {
-        res.status(401).send({ message: "User doesn't exists" });
-      }
-    })
-    .catch((e) => {
-      res.status(403).send({ message: "Login failed" });
-    });
-});
+/**
+ * @swagger
+ * /users/login:
+ *   post:
+ *     summary: Api endpoint for user login.
+ *     parameters:
+ *       - in: body
+ *         name: user
+ *         description: User data for login.
+ *         schema:
+ *           type: object
+ *           required:
+ *             - email
+ *             - password
+ *           properties:
+ *             email:
+ *               type: string
+ *             password:
+ *               type: string
+ */
+router.post("/login", login);
 
-router.post("/register", function (req, res, next) {
-  Users.create(req.body.userData)
-    .then((response) => {
-      res.send({ message: "User registered successfully" });
-    })
-    .catch((e) => {
-      res.send({ error: e, message: "User registration failed" });
-    });
-});
+/**
+ * @swagger
+ * /users/register:
+ *   post:
+ *     summary: Api endpoint for create user.
+ *     parameters:
+ *       - in: body
+ *         name: user
+ *         description: The user to create.
+ *         schema:
+ *           type: object
+ *           properties:
+ *             userData:
+ *               type: object
+ *               properties:
+ *                 email:
+ *                   type: string
+ *                 password:
+ *                   type: string
+ *                 username:
+ *                   type: string
+ *                 phone:
+ *                   type: string
+ *                 place:
+ *                   type: string
+ *               required:
+ *                 - email
+ *                 - password
+ *                 - username
+ */
+router.post("/register", register);
+
+
+router.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }))
+
 
 module.exports = router;
