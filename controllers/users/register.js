@@ -8,15 +8,15 @@ const {v4:uuidV4} =require('uuid')
  * @param {express.NextFunction} next
  */
 module.exports = async function (req, res, next) {
-  let userData = req.body.userData;
-  let user = await Users.findOne({ email: userData.email });
+  let { email, password, username, phone } = req.body;
+  let user = await Users.findOne({ email });
   if (user) {
     return res.status(403).send({ message: "User already exist" });
   }
 
-  let newUser = new Users(userData);
-  newUser.id=uuidV4()
-  newUser.setPassword(userData.password);
+  let newUser = new Users({username,email,phone,password});
+  newUser.id = uuidV4();
+  newUser.setPassword(password);
 
   newUser.save((err, User) => {
     if (err) {

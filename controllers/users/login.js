@@ -9,24 +9,24 @@ const { Users } = require("../../models/Users");
  */
 module.exports = function (req, res, next) {
   Users.findOne({ email: req.body.email })
-    .then((user) => {
-      if (user) {
+  .then((user) => {
+    if (user) {
         if (user.validPassword(req.body.password)) {
           let { hash, salt, ...data } = user.toJSON();
-          return res.status(201).send({
+          return res.status(201).json({
             message: "User Logged In",
             user: data,
           });
         } else {
-          return res.status(400).send({
+          return res.status(400).json({
             message: "Incorrect passord",
           });
         }
       } else {
-        res.status(401).send({ message: "User doesn't exists" });
+        res.status(401).json({ message: "User doesn't exists" });
       }
     })
     .catch((e) => {
-      res.status(403).send({ message: "Login failed" });
+      res.status(403).json({ message: "Login failed" });
     });
 };
