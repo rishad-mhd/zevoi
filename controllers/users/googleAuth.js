@@ -1,7 +1,7 @@
 const express = require("express");
 const verifyGoogleToken = require("../../lib/verifyGoogleToken");
 const { Users } = require("../../models/Users");
-const { v4: uuidV4 } = require("uuid");
+// const { v4: uuidV4 } = require("uuid");
 
 /**
  *
@@ -21,10 +21,10 @@ module.exports = async function (req, res, next) {
       });
     }
     if (profile) {
-      let id = uuidV4();
+      // let id = uuidV4();
       let user = await Users.updateOne(
         { email: profile.email },
-        { $set: { id, ...profile } },
+        { $set: { ...profile } },
         { upsert: true }
       );
       if (user) {

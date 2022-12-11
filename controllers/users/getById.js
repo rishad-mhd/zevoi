@@ -9,7 +9,7 @@ const { Users } = require("../../models/Users");
  */
 module.exports = async function (req, res, next) {
   let userId = req.params.id;
-  let user = await Users.findOne({ id: userId }, { hash: 0, salt: 0 });
+  let user = await Users.findOne({ _id: userId }, { hash: 0, salt: 0 });
   if (user) {
     res.send({ user });
   } else {

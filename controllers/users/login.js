@@ -1,4 +1,5 @@
 const express = require("express");
+const generateJWt = require("../../lib/generateJWT");
 const { Users } = require("../../models/Users");
 
 /**
@@ -13,6 +14,7 @@ module.exports = function (req, res, next) {
     if (user) {
         if (user.validPassword(req.body.password)) {
           let { hash, salt, ...data } = user.toJSON();
+          data.accessToken = generateJWt(user._id);
           return res.status(201).json({
             message: "User Logged In",
             user: data,

@@ -1,4 +1,5 @@
 var express = require("express");
+const forgotPassword = require("../controllers/users/forgotPassword");
 const getById = require("../controllers/users/getById");
 const googleAuth = require("../controllers/users/googleAuth");
 const login = require("../controllers/users/login");
@@ -108,5 +109,8 @@ router.get("/get-by-id/:id", getById);
 
 
 router.post("/auth/google", googleAuth);
+
+
+router.post("/forgot-password", forgotPassword);
 
 module.exports = router;

@@ -8,9 +8,11 @@ var swaggerJsdoc = require("swagger-jsdoc")
 var swaggerUi = require("swagger-ui-express");
 const mongoose = require("mongoose");
 var cors = require("cors");
+require('dotenv').config()
 
 var indexRouter = require("./routes/index");
 var usersRouter = require("./routes/users");
+const VerifyBearerToken = require("./middlewares/VerifyBearerToken");
 
 var app = express();
 // view engine setup 
@@ -25,6 +27,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
+app.use(VerifyBearerToken);
 
 
 async function main() {
@@ -49,7 +52,7 @@ const swaggerOptions = {
 };
 
 app.use("/", indexRouter);
-app.use("/users", usersRouter);
+app.use("/api/users", usersRouter);
 
 const swaggerDocs = swaggerJsdoc(swaggerOptions);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
